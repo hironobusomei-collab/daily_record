@@ -139,9 +139,15 @@ th:first-child{background:#eef3f9;z-index:4}
 
 <script>
 const KEY="dailyRecord_v4";
-// v20 starts with a clean record set; discard data from previous app versions.
-["dailyRecord_v3","dailyRecord_v4"].forEach(k=>localStorage.removeItem(k));
+// V21: keep saved records and restore them when the app starts.
 let data={};
+try{
+  const saved=localStorage.getItem(KEY);
+  if(saved){
+    const parsed=JSON.parse(saved);
+    if(parsed && typeof parsed==="object" && !Array.isArray(parsed)) data=parsed;
+  }
+}catch(e){ console.warn("Could not load saved records",e); }
 const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().slice(0,10);
 const pianoKeys=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
@@ -245,9 +251,17 @@ function saveCurrentToData(silent=true){
   const r=recordFromForm();
   if(!r.date)return;
   data[r.date]=r;
-  localStorage.setItem(KEY,JSON.stringify(data));
+  try{localStorage.setItem(KEY,JSON.stringify(data));}
+  catch(e){console.error("Could not save records",e);}
   if(!silent)renderHistory();
 }
+let autoSaveTimer=null;
+function scheduleAutoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>saveCurrentToData(true),500);
+}
+window.addEventListener("pagehide",()=>saveCurrentToData(true));
+window.addEventListener("beforeunload",()=>saveCurrentToData(true));
 function getMonthlyRecord(date){
   const saved=data[date];
   if(saved)return saved;
@@ -285,6 +299,9 @@ window.openDateFromMonthly=d=>{$("date").value=d;loadDate();showPage("daily");wi
 $("month").onchange=renderSummary;$("tabDaily").onclick=()=>showPage("daily");$("tabMonthly").onclick=()=>showPage("monthly");
 
 buildExerciseSelectors();renderKeys();loadDate();renderHistory();renderSummary();
+// Automatically preserve edits even if the iPhone closes/suspends the app before SAVE is tapped.
+document.querySelectorAll("input, textarea, select").forEach(el=>el.addEventListener("input",scheduleAutoSave));
+document.querySelectorAll("#nx button,#c button,#nightToilet button,#bowel button,[data-key]").forEach(el=>el.addEventListener("click",scheduleAutoSave));
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
