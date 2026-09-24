@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8FC7A4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Daily Record">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>DAILY RECORDS</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#172033;background:#f5f7fb}
+*{box-sizing:border-box}body{margin:0}.app{max-width:1000px;margin:auto;padding:8px 6px 28px}
+h1{font-size:23px;margin:3px 0 2px}.sub{color:#64748b;font-size:12px}
+.card{background:#fff;border-radius:15px;padding:14px;margin:10px 0;box-shadow:0 2px 10px #0000000b}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
+.tabs{display:flex;gap:6px}.tab{flex:1;background:#e9eef6}.tab.active{background:#8FC7A4;color:#173B2B}
+.datebox{display:flex;gap:7px;align-items:center}.datebox .date-display{flex:1;min-width:0}.datebox .date-display button{width:100%;min-height:48px;background:#fff;border:1px solid #d7dee9;border-radius:10px;font-weight:700;font-size:17px;color:#172033;cursor:pointer}.datebox>button{min-width:48px;min-height:48px;cursor:pointer}
+.date-picker-modal{position:fixed;inset:0;background:rgba(15,23,42,.38);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000}.date-picker-modal.open{display:flex}.date-picker{width:min(360px,100%);background:#fff;border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.22)}.date-picker-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.date-picker-title{font-size:18px;font-weight:800}.date-picker-head button{min-width:42px;min-height:42px;padding:7px 10px}.date-picker-week,.date-picker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.date-picker-week div{text-align:center;font-size:11px;font-weight:800;color:#64748b;padding:4px 0}.date-picker-grid button{padding:0;height:40px;border-radius:10px;background:#f1f5f9}.date-picker-grid button.empty{visibility:hidden}.date-picker-grid button.selected{background:#8FC7A4;color:#173B2B}.date-picker-actions{display:flex;gap:8px;margin-top:12px}.date-picker-actions button{flex:1}.date-picker-actions .cancel{background:#e8eef8}
+.section-title{font-size:16px;font-weight:800;margin-bottom:10px}
+label{font-size:12px;color:#475569;font-weight:700;display:block;margin-bottom:4px}
+input,textarea,button,select{font:inherit}input,textarea,select{width:100%;border:1px solid #d7dee9;border-radius:9px;padding:10px;background:#fff}
+textarea{min-height:72px}.grid3{display:grid;grid-template-columns:1fr 2fr;gap:9px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bp-line{display:flex;align-items:center;gap:6px}.bp-line input{min-width:0}.bp-line span{font-weight:800}
+button{border:0;border-radius:9px;padding:9px 12px;background:#e8eef8;color:#172033;font-weight:700}
+button.primary{background:#8FC7A4;color:#173B2B}.actions{display:flex;gap:8px}.actions button{flex:1}
+.exercise{border-top:1px solid #eef2f7;padding:10px 0}.exercise:first-child{border-top:0;padding-top:0}.exercise-name{font-weight:800;margin-bottom:7px}.total{font-size:11px;color:#8FC7A4;margin-top:4px}
+.pills,.toggle,.c-scroll{display:flex;gap:6px;flex-wrap:wrap}.c-scroll{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.c-scroll button{flex:0 0 auto}
+.pill.on,.toggle button.on,.c-scroll button.on{background:#8FC7A4;color:#173B2B}
+.small{font-size:11px;color:#64748b}.history-item{border-top:1px solid #eef2f7;padding:9px 0}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#f8fafc;border-radius:10px;padding:9px}.stat b{display:block;font-size:17px}
+.table-wrap{overflow:auto;max-height:calc(100vh - 250px);border:1px solid #dbe2ec;border-radius:9px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+table{border-collapse:collapse;width:100%;min-width:760px;table-layout:fixed;font-size:9px}
+th,td{border-right:1px solid #dfe5ed;border-bottom:1px solid #dfe5ed;padding:1px 2px;text-align:center;white-space:nowrap;height:21px}
+th{background:#eef3f9;font-weight:800;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 #dfe5ed}
+td:first-child,th:first-child{position:sticky;left:0;background:#fff;z-index:2;font-weight:800}
+th:first-child{background:#eef3f9;z-index:4}
+.monthly-note{margin:7px 0}.monthly-head{display:flex;gap:7px;align-items:center;justify-content:space-between}.monthly-head input{width:145px}
+@media(max-width:420px){.grid3{grid-template-columns:1fr 1.7fr}.summary{grid-template-columns:repeat(2,1fr)}}
+
+.basic-line{display:grid;grid-template-columns:1fr 1.8fr 1fr;gap:8px;align-items:end}
+.bp-field{min-width:0}
+.basic-line input{min-width:0}
+@media(max-width:430px){.basic-line{grid-template-columns:.9fr 1.6fr .9fr;gap:5px}.basic-line label{font-size:10px}.basic-line input{padding:8px 5px;font-size:14px}.bp-line{gap:3px}.bp-line input{padding:8px 3px}.section-title{font-size:15px}}
+
+/* v13: compact monthly view + reliable date picker */
+.monthly-table th, .monthly-table td {
+  border-right: 1px solid rgba(0,0,0,.25);
+}
+.monthly-table th.basic:last-of-type, .monthly-table td.basic:last-of-type,
+.monthly-table th.exer:last-of-type, .monthly-table td.exer:last-of-type,
+.monthly-table th.piano:last-of-type, .monthly-table td.piano:last-of-type,
+.monthly-table th.life:last-of-type, .monthly-table td.life:last-of-type {
+  border-right: 3px solid currentColor !important;
+}
+.monthly-table th.memo, .monthly-table td.memo {
+  border-right: 0 !important;
+}
+</style>
+</head>
+<body>
+<div id="datePickerModal" class="date-picker-modal" role="dialog" aria-modal="true" aria-label="Select date">
+  <div class="date-picker">
+    <div class="date-picker-head">
+      <button id="pickerPrev" type="button" aria-label="Previous month">‹</button>
+      <div id="pickerTitle" class="date-picker-title"></div>
+      <button id="pickerNext" type="button" aria-label="Next month">›</button>
+    </div>
+    <div class="date-picker-week"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+    <div id="pickerGrid" class="date-picker-grid"></div>
+    <div class="date-picker-actions"><button id="pickerToday" type="button" class="primary">Today</button><button id="pickerCancel" type="button" class="cancel">Cancel</button></div>
+  </div>
+</div>
+<div class="app">
+<h1>DAILY RECORDS</h1>
+
+<div class="card">
+  <div class="tabs"><button id="tabDaily" class="tab active">DAILY</button><button id="tabMonthly" class="tab">MONTHLY VIEW</button></div>
+</div>
+
+<div id="dailyPage">
+  <div class="card">
+    <div class="datebox"><button id="prev" type="button" aria-label="Previous day">‹</button><div class="date-display"><button id="dateLabel" type="button" aria-label="Change date">Select date</button><input id="date" type="hidden"></div><button id="next" type="button" aria-label="Next day">›</button></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">BASIC</div>
+    <div class="basic-line">
+      <div><label>WT</label><input id="weight" type="number" step="0.1" placeholder="kg"></div>
+      <div class="bp-field"><label>BP</label><div class="bp-line"><input id="sys" type="number" placeholder="SYS"><span>/</span><input id="dia" type="number" placeholder="DIA"></div></div>
+      <div><label>P</label><input id="pulse" type="number" placeholder="bpm"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">TRAINING</div>
+    <div class="exercise"><div class="exercise-name">SQ — SQUAT</div><div class="grid2"><div><label>REPS</label><select id="sqReps"></select></div><div><label>SETS</label><select id="sqSets"></select></div></div><div id="sqTotal" class="total">TOTAL 0</div></div>
+    <div class="exercise"><div class="exercise-name">PU — PUSH UP</div><div class="grid2"><div><label>REPS</label><select id="puReps"></select></div><div><label>SETS</label><select id="puSets"></select></div></div><div id="puTotal" class="total">TOTAL 0</div></div>
+    <div class="exercise"><div class="exercise-name">ST — SIT UP</div><div class="grid2"><div><label>REPS</label><select id="stReps"></select></div><div><label>SETS</label><select id="stSets"></select></div></div><div id="stTotal" class="total">TOTAL 0</div></div>
+    <div style="margin-top:9px"><label>STEPS</label><input id="steps" type="number" min="0" placeholder="steps"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">PIANO</div>
+    <label>SONG</label><input id="song" placeholder="Song title">
+    <label style="margin-top:9px">PRACTICED KEYS (MULTI-SELECT)</label>
+    <div class="pills" id="keys"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">LIFE</div>
+    <label>NX — MED</label><div class="toggle" id="nx"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
+    <label style="margin-top:11px">C — CAFFEINE</label>
+    <div class="c-scroll" id="c"><button data-v="0">NO</button><button data-v="1">1 cup</button><button data-v="2">2 cups</button><button data-v="3">3 cups</button><button data-v="4">4 cups</button><button data-v="5">5+ cups</button></div>
+    <label style="margin-top:11px">UR</label>
+    <div class="c-scroll" id="nightToilet"><button data-v="0">0 times</button><button data-v="1">1 time</button><button data-v="2">2 times</button><button data-v="3">3 times</button><button data-v="4">4+ times</button></div>
+    <label style="margin-top:11px">DEF</label><div class="toggle" id="bowel"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
+    <label style="margin-top:11px">A — ALCOHOL (mL)</label><input id="alcohol" type="number" min="0" step="1" placeholder="e.g. 350">
+  </div>
+
+  <div class="card"><div class="section-title">MEMO</div><textarea id="memo"></textarea></div>
+
+  <div class="card"><div class="actions"><button class="primary" id="save">SAVE</button><button id="clear">CLEAR</button></div></div>
+
+  <div class="card"><div class="between row"><div class="section-title" style="margin:0">HISTORY</div><button id="export">BACKUP JSON</button></div><div id="history"></div></div>
+</div>
+
+<div id="monthlyPage" style="display:none">
+  <div class="card">
+    <div class="monthly-head"><div class="section-title" style="margin:0">MONTHLY VIEW</div><input id="month" type="month"></div>
+    <div class="small monthly-note">One month on one page. Compact notebook-style view.</div>
+    <div class="table-wrap"><table id="monthlyTable"></table></div>
+  </div>
+  <div class="card"><div class="section-title">MONTHLY SUMMARY</div><div class="summary" id="summary"></div></div>
+</div>
+</div>
+
+<script>
+const KEY="dailyRecord_v4";
+// v20 starts with a clean record set; discard data from previous app versions.
+["dailyRecord_v3","dailyRecord_v4"].forEach(k=>localStorage.removeItem(k));
+let data={};
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const pianoKeys=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+function formatDateLabel(s){if(!s)return "Select date";const [y,m,d]=s.split("-").map(Number);return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric"}).format(new Date(y,m-1,d));}
+function syncDateLabel(){$("dateLabel").textContent=formatDateLabel($("date").value);}
+function buildExerciseSelectors(){
+  ["sqReps","puReps","stReps"].forEach(id=>{
+    $(id).innerHTML=Array.from({length:41},(_,i)=>`<option value="${i*5}">${i*5}</option>`).join("");
+  });
+  ["sqSets","puSets","stSets"].forEach(id=>{
+    $(id).innerHTML=Array.from({length:11},(_,i)=>`<option value="${i}">${i}</option>`).join("");
+  });
+}
+let state={nx:"",c:"0",nightToilet:"0",bowel:"",keys:[]};
+$("date").value=today();$("month").value=today().slice(0,7);syncDateLabel();
+
+function val(id){return $(id).value}
+function setVal(id,v){$(id).value=v??""}
+function total(a,b){return (Number(a)||0)*(Number(b)||0)}
+function renderKeys(){
+ $("keys").innerHTML=pianoKeys.map(k=>`<button class="pill ${state.keys.includes(k)?"on":""}" data-key="${k}">${k}</button>`).join("");
+ document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>{state.keys=state.keys.includes(b.dataset.key)?state.keys.filter(x=>x!==b.dataset.key):[...state.keys,b.dataset.key];renderKeys()});
+}
+function setToggle(id,v){
+ state[id]=v;
+ document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===String(v)));
+}
+function updateTotals(){
+ [["sq","sqTotal"],["pu","puTotal"],["st","stTotal"]].forEach(([p,t])=>$(t).textContent=`TOTAL ${total(val(p+"Reps"),val(p+"Sets"))}`);
+}
+function recordFromForm(){
+ return {date:val("date"),weight:val("weight"),sys:val("sys"),dia:val("dia"),pulse:val("pulse"),
+ sq:{reps:val("sqReps"),sets:val("sqSets")},pu:{reps:val("puReps"),sets:val("puSets")},st:{reps:val("stReps"),sets:val("stSets")},
+ steps:val("steps"),piano:{song:val("song"),keys:[...state.keys]},nx:state.nx,c:state.c,nightToilet:state.nightToilet,bowel:state.bowel,alcohol:val("alcohol"),memo:val("memo")};
+}
+function clearForm(keepDate=true){
+ ["weight","sys","dia","pulse","steps","song","alcohol","memo"].forEach(id=>setVal(id,"")); ["sqReps","puReps","stReps","sqSets","puSets","stSets"].forEach(id=>setVal(id,"0"));
+ state={nx:"",c:"0",nightToilet:"0",bowel:"",keys:[]};renderKeys();
+ ["nx","c","nightToilet","bowel"].forEach(id=>setToggle(id,id==="c"?"0":id==="nightToilet"?"0":""));
+ updateTotals();
+ if(!keepDate)$("date").value=today();
+}
+function fill(r){
+ if(!r){clearForm(true);return}
+ setVal("weight",r.weight);setVal("sys",r.sys);setVal("dia",r.dia);setVal("pulse",r.pulse);
+ setVal("sqReps",r.sq?.reps ?? "0");setVal("sqSets",r.sq?.sets ?? "0");setVal("puReps",r.pu?.reps ?? "0");setVal("puSets",r.pu?.sets ?? "0");setVal("stReps",r.st?.reps ?? "0");setVal("stSets",r.st?.sets ?? "0");setVal("steps",r.steps);
+ setVal("song",r.piano?.song);setVal("alcohol",r.alcohol);setVal("memo",r.memo);
+ state.keys=r.piano?.keys||[];state.nx=r.nx||"";state.c=r.c||"0";state.nightToilet=r.nightToilet||"0";state.bowel=r.bowel||"";
+ renderKeys();setToggle("nx",state.nx);setToggle("c",state.c);setToggle("nightToilet",state.nightToilet);setToggle("bowel",state.bowel);updateTotals();
+}
+function loadDate(){fill(data[val("date")]);syncDateLabel()}
+
+let pickerMonth="";
+function openDatePicker(){
+  pickerMonth=(val("date")||today()).slice(0,7);
+  renderDatePicker();
+  $("datePickerModal").classList.add("open");
+}
+function closeDatePicker(){$("datePickerModal").classList.remove("open")}
+function renderDatePicker(){
+  const [y,m]=pickerMonth.split("-").map(Number);
+  $("pickerTitle").textContent=new Intl.DateTimeFormat("en-US",{month:"long",year:"numeric"}).format(new Date(y,m-1,1));
+  const first=new Date(y,m-1,1).getDay();
+  const days=new Date(y,m,0).getDate();
+  const selected=val("date");
+  let html="";
+  for(let i=0;i<first;i++)html+='<button class="empty" type="button" tabindex="-1"> </button>';
+  for(let d=1;d<=days;d++){
+    const ds=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    html+=`<button type="button" data-picker-date="${ds}" class="${ds===selected?"selected":""}">${d}</button>`;
+  }
+  $("pickerGrid").innerHTML=html;
+  document.querySelectorAll("[data-picker-date]").forEach(b=>b.onclick=()=>{
+    $("date").value=b.dataset.pickerDate;
+    loadDate();
+    closeDatePicker();
+  });
+}
+$("dateLabel").onclick=openDatePicker;
+$("pickerPrev").onclick=()=>{let [y,m]=pickerMonth.split("-").map(Number);m--;if(m<1){m=12;y--;}pickerMonth=`${y}-${String(m).padStart(2,"0")}`;renderDatePicker()};
+$("pickerNext").onclick=()=>{let [y,m]=pickerMonth.split("-").map(Number);m++;if(m>12){m=1;y++;}pickerMonth=`${y}-${String(m).padStart(2,"0")}`;renderDatePicker()};
+$("pickerToday").onclick=()=>{$("date").value=today();loadDate();closeDatePicker()};
+$("pickerCancel").onclick=closeDatePicker;
+$("datePickerModal").onclick=e=>{if(e.target===$("datePickerModal"))closeDatePicker()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDatePicker()});
+$("prev").onclick=()=>{let d=new Date(val("date")+"T00:00:00");d.setDate(d.getDate()-1);$("date").value=d.toISOString().slice(0,10);loadDate()};
+$("next").onclick=()=>{let d=new Date(val("date")+"T00:00:00");d.setDate(d.getDate()+1);$("date").value=d.toISOString().slice(0,10);loadDate()};
+["sqReps","sqSets","puReps","puSets","stReps","stSets"].forEach(id=>$(id).oninput=updateTotals);
+["nx","c","nightToilet","bowel"].forEach(id=>document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>setToggle(id,b.dataset.v)));
+$("save").onclick=()=>{let r=recordFromForm();data[r.date]=r;localStorage.setItem(KEY,JSON.stringify(data));renderHistory();alert("Saved")};
+$("clear").onclick=()=>clearForm(true);
+
+function renderHistory(){
+ const ds=Object.keys(data).sort().reverse().slice(0,30);
+ $("history").innerHTML=ds.length?ds.map(d=>{let r=data[d];return `<div class="history-item"><div class="between row"><b>${d}</b><button onclick="openDate('${d}')">Open</button></div><div class="small">WT ${r.weight||"-"} / BP ${r.sys||"-"}/${r.dia||"-"} / STEPS ${r.steps||0} / SQ ${total(r.sq?.reps,r.sq?.sets)} / PU ${total(r.pu?.reps,r.pu?.sets)} / ST ${total(r.st?.reps,r.st?.sets)}</div></div>`}).join(""):"<div class='small'>No records yet</div>";
+}
+window.openDate=d=>{$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
+$("export").onclick=()=>{let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="daily-record-backup.json";a.click()};
+
+function saveCurrentToData(silent=true){
+  const r=recordFromForm();
+  if(!r.date)return;
+  data[r.date]=r;
+  localStorage.setItem(KEY,JSON.stringify(data));
+  if(!silent)renderHistory();
+}
+function getMonthlyRecord(date){
+  const saved=data[date];
+  if(saved)return saved;
+  if(val("date")===date)return recordFromForm();
+  return null;
+}
+function renderSummary(){
+ const m=$("month").value,rs=Object.values(data).filter(r=>r.date?.startsWith(m));
+ const avg=rs.length?Math.round(rs.reduce((a,r)=>a+(Number(r.steps)||0),0)/rs.length):0;
+ const sums=["sq","pu","st"].map(k=>rs.reduce((a,r)=>a+total(r[k]?.reps,r[k]?.sets),0));
+ const alc=rs.reduce((a,r)=>a+(Number(r.alcohol)||0),0);
+ $("summary").innerHTML=[["DAYS",rs.length+" days"],["AVG STEPS",avg.toLocaleString()+" steps"],["SQ TOTAL",sums[0]+""],["PU TOTAL",sums[1]+""],["ST TOTAL",sums[2]+""],["A TOTAL",alc.toLocaleString()+"mL"]].map(x=>`<div class="stat"><span class="small">${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ renderMonthlyTable(m);
+}
+function renderMonthlyTable(m){
+ const days=new Date(Number(m.slice(0,4)),Number(m.slice(5,7)),0).getDate();let rows="";
+ for(let d=1;d<=days;d++){
+  const date=m+"-"+String(d).padStart(2,"0"),r=getMonthlyRecord(date);
+  rows+=`<tr><td><button class="monthly-link" type="button" onclick="openDateFromMonthly('${date}')">${d}</button></td>
+  <td>${r?.weight||""}</td><td>${r?`${r.sys||""}/${r.dia||""}`:""}</td><td>${r?.pulse||""}</td>
+  <td>${r?total(r.sq?.reps,r.sq?.sets):""}</td><td>${r?total(r.pu?.reps,r.pu?.sets):""}</td><td>${r?total(r.st?.reps,r.st?.sets):""}</td>
+  <td>${r?.steps||""}</td><td>${r?.piano?.song||""}</td><td>${r?.piano?.keys?.join(",")||""}</td>
+  <td>${r?.nx==="yes"?"○":r?.nx==="no"?"－":""}</td><td>${r?.c==="0"?"－":r?.c?`${r.c}`:""}</td>
+  <td>${r?.nightToilet??""}</td><td>${r?.bowel==="yes"?"○":r?.bowel==="no"?"－":""}</td>
+  <td>${r?.alcohol||""}</td><td>${r?.memo||""}</td></tr>`;
+ }
+ $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>WT</th><th>BP</th><th>P</th><th>SQ</th><th>PU</th><th>ST</th><th>STEPS</th><th>PIANO</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
+}
+function showPage(p){
+ $("dailyPage").style.display=p==="daily"?"block":"none";$("monthlyPage").style.display=p==="monthly"?"block":"none";
+ $("tabDaily").classList.toggle("active",p==="daily");$("tabMonthly").classList.toggle("active",p==="monthly");
+ if(p==="monthly"){saveCurrentToData(true);renderSummary();}
+}
+window.openDateFromMonthly=d=>{$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
+$("month").onchange=renderSummary;$("tabDaily").onclick=()=>showPage("daily");$("tabMonthly").onclick=()=>showPage("monthly");
+
+buildExerciseSelectors();renderKeys();loadDate();renderHistory();renderSummary();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
