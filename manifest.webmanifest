@@ -1,10 +1,11 @@
 {
   "name":"Daily Record",
   "short_name":"Daily Record",
+  "id":"./",
+  "lang":"ja",
   "start_url":"./",
   "scope":"./",
   "display":"standalone",
-  "orientation":"landscape",
   "background_color":"#f5f7fb",
   "theme_color":"#8FC7A4",
   "icons":[

@@ -26,14 +26,14 @@ textarea{min-height:72px}.grid3{display:grid;grid-template-columns:1fr 2fr;gap:9
 .bp-line{display:flex;align-items:center;gap:6px}.bp-line input{min-width:0}.bp-line span{font-weight:800}
 button{border:0;border-radius:9px;padding:9px 12px;background:#e8eef8;color:#172033;font-weight:700}
 button.primary{background:#8FC7A4;color:#173B2B}.actions{display:flex;gap:8px}.actions button{flex:1}
-.exercise{border-top:1px solid #eef2f7;padding:10px 0}.exercise:first-child{border-top:0;padding-top:0}.exercise-name{font-weight:800;margin-bottom:7px}.total{font-size:11px;color:#8FC7A4;margin-top:4px}
+.exercise{border-top:1px solid #eef2f7;padding:10px 0}.exercise:first-child{border-top:0;padding-top:0}.exercise-name{font-weight:800;margin-bottom:7px}.total{font-size:12px;color:#2F7A52;margin-top:4px}
 .pills,.toggle,.c-scroll{display:flex;gap:6px;flex-wrap:wrap}.c-scroll{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.c-scroll button{flex:0 0 auto}
 .pill.on,.toggle button.on,.c-scroll button.on{background:#8FC7A4;color:#173B2B}
 .small{font-size:11px;color:#64748b}.history-item{border-top:1px solid #eef2f7;padding:9px 0}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#f8fafc;border-radius:10px;padding:9px}.stat b{display:block;font-size:17px}
 .table-wrap{overflow:auto;max-height:calc(100vh - 250px);border:1px solid #dbe2ec;border-radius:9px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-table{border-collapse:collapse;width:100%;min-width:760px;table-layout:fixed;font-size:9px}
-th,td{border-right:1px solid #dfe5ed;border-bottom:1px solid #dfe5ed;padding:1px 2px;text-align:center;white-space:nowrap;height:21px}
+table{border-collapse:collapse;width:100%;min-width:974px;table-layout:fixed;font-size:11px}
+th,td{border-right:1px solid #dfe5ed;border-bottom:1px solid #dfe5ed;padding:1px 2px;text-align:center;white-space:nowrap;height:26px;overflow:hidden;text-overflow:ellipsis}
 th{background:#eef3f9;font-weight:800;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 #dfe5ed}
 td:first-child,th:first-child{position:sticky;left:0;background:#fff;z-index:2;font-weight:800}
 th:first-child{background:#eef3f9;z-index:4}
@@ -45,19 +45,11 @@ th:first-child{background:#eef3f9;z-index:4}
 .basic-line input{min-width:0}
 @media(max-width:430px){.basic-line{grid-template-columns:.9fr 1.6fr .9fr;gap:5px}.basic-line label{font-size:10px}.basic-line input{padding:8px 5px;font-size:14px}.bp-line{gap:3px}.bp-line input{padding:8px 3px}.section-title{font-size:15px}}
 
-/* v13: compact monthly view + reliable date picker */
-.monthly-table th, .monthly-table td {
-  border-right: 1px solid rgba(0,0,0,.25);
-}
-.monthly-table th.basic:last-of-type, .monthly-table td.basic:last-of-type,
-.monthly-table th.exer:last-of-type, .monthly-table td.exer:last-of-type,
-.monthly-table th.piano:last-of-type, .monthly-table td.piano:last-of-type,
-.monthly-table th.life:last-of-type, .monthly-table td.life:last-of-type {
-  border-right: 3px solid currentColor !important;
-}
-.monthly-table th.memo, .monthly-table td.memo {
-  border-right: 0 !important;
-}
+/* v22: monthly table */
+.monthly-table th:nth-child(1){width:40px}.monthly-table th:nth-child(2){width:46px}.monthly-table th:nth-child(3){width:64px}.monthly-table th:nth-child(4){width:40px}.monthly-table th:nth-child(5){width:44px}.monthly-table th:nth-child(6){width:44px}.monthly-table th:nth-child(7){width:44px}.monthly-table th:nth-child(8){width:56px}.monthly-table th:nth-child(9){width:110px}.monthly-table th:nth-child(10){width:90px}.monthly-table th:nth-child(11){width:36px}.monthly-table th:nth-child(12){width:36px}.monthly-table th:nth-child(13){width:36px}.monthly-table th:nth-child(14){width:40px}.monthly-table th:nth-child(15){width:48px}.monthly-table th:nth-child(16){width:200px}
+.monthly-table th:nth-child(1),.monthly-table td:nth-child(1),.monthly-table th:nth-child(4),.monthly-table td:nth-child(4),.monthly-table th:nth-child(8),.monthly-table td:nth-child(8),.monthly-table th:nth-child(10),.monthly-table td:nth-child(10),.monthly-table th:nth-child(15),.monthly-table td:nth-child(15){border-right:2px solid #94a3b8}
+.monthly-table td:nth-child(9),.monthly-table td:nth-child(16){text-align:left}
+.monthly-link{background:none;min-height:0;padding:2px 6px;font-size:11px;font-weight:800;color:#172033;width:100%}
 </style>
 </head>
 <body>
@@ -88,9 +80,9 @@ th:first-child{background:#eef3f9;z-index:4}
   <div class="card">
     <div class="section-title">BASIC</div>
     <div class="basic-line">
-      <div><label>WT</label><input id="weight" type="number" step="0.1" placeholder="kg"></div>
-      <div class="bp-field"><label>BP</label><div class="bp-line"><input id="sys" type="number" placeholder="SYS"><span>/</span><input id="dia" type="number" placeholder="DIA"></div></div>
-      <div><label>P</label><input id="pulse" type="number" placeholder="bpm"></div>
+      <div><label for="weight">WT (kg)</label><input id="weight" type="number" step="0.1" inputmode="decimal" placeholder="kg"></div>
+      <div class="bp-field"><label for="sys">BP (mmHg)</label><div class="bp-line"><input id="sys" type="number" inputmode="numeric" placeholder="SYS" aria-label="Systolic"><span>/</span><input id="dia" type="number" inputmode="numeric" placeholder="DIA" aria-label="Diastolic"></div></div>
+      <div><label for="pulse">P (bpm)</label><input id="pulse" type="number" inputmode="numeric" placeholder="bpm"></div>
     </div>
   </div>
 
@@ -99,32 +91,32 @@ th:first-child{background:#eef3f9;z-index:4}
     <div class="exercise"><div class="exercise-name">SQ — SQUAT</div><div class="grid2"><div><label>REPS</label><select id="sqReps"></select></div><div><label>SETS</label><select id="sqSets"></select></div></div><div id="sqTotal" class="total">TOTAL 0</div></div>
     <div class="exercise"><div class="exercise-name">PU — PUSH UP</div><div class="grid2"><div><label>REPS</label><select id="puReps"></select></div><div><label>SETS</label><select id="puSets"></select></div></div><div id="puTotal" class="total">TOTAL 0</div></div>
     <div class="exercise"><div class="exercise-name">ST — SIT UP</div><div class="grid2"><div><label>REPS</label><select id="stReps"></select></div><div><label>SETS</label><select id="stSets"></select></div></div><div id="stTotal" class="total">TOTAL 0</div></div>
-    <div style="margin-top:9px"><label>STEPS</label><input id="steps" type="number" min="0" placeholder="steps"></div>
+    <div style="margin-top:9px"><label for="steps">STEPS</label><input id="steps" type="number" min="0" inputmode="numeric" placeholder="steps"></div>
   </div>
 
   <div class="card">
     <div class="section-title">PIANO</div>
-    <label>SONG</label><input id="song" placeholder="Song title">
+    <label for="song">SONG</label><input id="song" placeholder="Song title">
     <label style="margin-top:9px">PRACTICED KEYS (MULTI-SELECT)</label>
-    <div class="pills" id="keys"></div>
+    <div class="pills" id="keys" role="group" aria-label="Practiced keys"></div>
   </div>
 
   <div class="card">
     <div class="section-title">LIFE</div>
-    <label>NX — MED</label><div class="toggle" id="nx"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
-    <label style="margin-top:11px">C — CAFFEINE</label>
-    <div class="c-scroll" id="c"><button data-v="0">NO</button><button data-v="1">1 cup</button><button data-v="2">2 cups</button><button data-v="3">3 cups</button><button data-v="4">4 cups</button><button data-v="5">5+ cups</button></div>
-    <label style="margin-top:11px">UR</label>
-    <div class="c-scroll" id="nightToilet"><button data-v="0">0 times</button><button data-v="1">1 time</button><button data-v="2">2 times</button><button data-v="3">3 times</button><button data-v="4">4+ times</button></div>
-    <label style="margin-top:11px">DEF</label><div class="toggle" id="bowel"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
-    <label style="margin-top:11px">A — ALCOHOL (mL)</label><input id="alcohol" type="number" min="0" step="1" placeholder="e.g. 350">
+    <label id="lbNx">NX — MED</label><div class="toggle" id="nx" role="group" aria-labelledby="lbNx"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
+    <label id="lbC" style="margin-top:11px">C — CAFFEINE</label>
+    <div class="c-scroll" id="c" role="group" aria-labelledby="lbC"><button data-v="0">NO</button><button data-v="1">1 cup</button><button data-v="2">2 cups</button><button data-v="3">3 cups</button><button data-v="4">4 cups</button><button data-v="5">5+ cups</button></div>
+    <label id="lbUr" style="margin-top:11px">UR</label>
+    <div class="c-scroll" id="nightToilet" role="group" aria-labelledby="lbUr"><button data-v="0">0 times</button><button data-v="1">1 time</button><button data-v="2">2 times</button><button data-v="3">3 times</button><button data-v="4">4+ times</button></div>
+    <label id="lbDef" style="margin-top:11px">DEF</label><div class="toggle" id="bowel" role="group" aria-labelledby="lbDef"><button data-v="yes">YES</button><button data-v="no">NO</button></div>
+    <label for="alcohol" style="margin-top:11px">A — ALCOHOL (mL)</label><input id="alcohol" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 350">
   </div>
 
-  <div class="card"><div class="section-title">MEMO</div><textarea id="memo"></textarea></div>
+  <div class="card"><div class="section-title">MEMO</div><textarea id="memo" aria-label="Memo"></textarea></div>
 
   <div class="card"><div class="actions"><button class="primary" id="save">SAVE</button><button id="clear">CLEAR</button></div></div>
 
-  <div class="card"><div class="between row"><div class="section-title" style="margin:0">HISTORY</div><button id="export">BACKUP JSON</button></div><div id="history"></div></div>
+  <div class="card"><div class="between row"><div class="section-title" style="margin:0">HISTORY</div><div class="row"><button id="export">BACKUP JSON</button><button id="import">RESTORE JSON</button></div></div><div id="backupNote" class="small" style="margin:6px 0"></div><input id="importFile" type="file" accept="application/json,.json" hidden><div id="history"></div></div>
 </div>
 
 <div id="monthlyPage" style="display:none">
@@ -149,7 +141,9 @@ try{
   }
 }catch(e){ console.warn("Could not load saved records",e); }
 const $=id=>document.getElementById(id);
-const today=()=>new Date().toISOString().slice(0,10);
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const today=()=>ymd(new Date());
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pianoKeys=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
 function formatDateLabel(s){if(!s)return "Select date";const [y,m,d]=s.split("-").map(Number);return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric"}).format(new Date(y,m-1,d));}
 function syncDateLabel(){$("dateLabel").textContent=formatDateLabel($("date").value);}
@@ -168,12 +162,12 @@ function val(id){return $(id).value}
 function setVal(id,v){$(id).value=v??""}
 function total(a,b){return (Number(a)||0)*(Number(b)||0)}
 function renderKeys(){
- $("keys").innerHTML=pianoKeys.map(k=>`<button class="pill ${state.keys.includes(k)?"on":""}" data-key="${k}">${k}</button>`).join("");
+ $("keys").innerHTML=pianoKeys.map(k=>`<button class="pill ${state.keys.includes(k)?"on":""}" data-key="${k}" aria-pressed="${state.keys.includes(k)}">${k}</button>`).join("");
  document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>{state.keys=state.keys.includes(b.dataset.key)?state.keys.filter(x=>x!==b.dataset.key):[...state.keys,b.dataset.key];renderKeys()});
 }
 function setToggle(id,v){
  state[id]=v;
- document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===String(v)));
+ document.querySelectorAll(`#${id} button`).forEach(b=>{const on=b.dataset.v===String(v);b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)});
 }
 function updateTotals(){
  [["sq","sqTotal"],["pu","puTotal"],["st","stTotal"]].forEach(([p,t])=>$(t).textContent=`TOTAL ${total(val(p+"Reps"),val(p+"Sets"))}`);
@@ -195,7 +189,7 @@ function fill(r){
  setVal("weight",r.weight);setVal("sys",r.sys);setVal("dia",r.dia);setVal("pulse",r.pulse);
  setVal("sqReps",r.sq?.reps ?? "0");setVal("sqSets",r.sq?.sets ?? "0");setVal("puReps",r.pu?.reps ?? "0");setVal("puSets",r.pu?.sets ?? "0");setVal("stReps",r.st?.reps ?? "0");setVal("stSets",r.st?.sets ?? "0");setVal("steps",r.steps);
  setVal("song",r.piano?.song);setVal("alcohol",r.alcohol);setVal("memo",r.memo);
- state.keys=r.piano?.keys||[];state.nx=r.nx||"";state.c=r.c||"0";state.nightToilet=r.nightToilet||"0";state.bowel=r.bowel||"";
+ state.keys=Array.isArray(r.piano?.keys)?[...r.piano.keys]:[];state.nx=r.nx||"";state.c=r.c||"0";state.nightToilet=r.nightToilet||"0";state.bowel=r.bowel||"";
  renderKeys();setToggle("nx",state.nx);setToggle("c",state.c);setToggle("nightToilet",state.nightToilet);setToggle("bowel",state.bowel);updateTotals();
 }
 function loadDate(){fill(data[val("date")]);syncDateLabel()}
@@ -221,7 +215,7 @@ function renderDatePicker(){
   }
   $("pickerGrid").innerHTML=html;
   document.querySelectorAll("[data-picker-date]").forEach(b=>b.onclick=()=>{
-    $("date").value=b.dataset.pickerDate;
+    flushSave();$("date").value=b.dataset.pickerDate;
     loadDate();
     closeDatePicker();
   });
@@ -229,43 +223,93 @@ function renderDatePicker(){
 $("dateLabel").onclick=openDatePicker;
 $("pickerPrev").onclick=()=>{let [y,m]=pickerMonth.split("-").map(Number);m--;if(m<1){m=12;y--;}pickerMonth=`${y}-${String(m).padStart(2,"0")}`;renderDatePicker()};
 $("pickerNext").onclick=()=>{let [y,m]=pickerMonth.split("-").map(Number);m++;if(m>12){m=1;y++;}pickerMonth=`${y}-${String(m).padStart(2,"0")}`;renderDatePicker()};
-$("pickerToday").onclick=()=>{$("date").value=today();loadDate();closeDatePicker()};
+$("pickerToday").onclick=()=>{flushSave();$("date").value=today();loadDate();closeDatePicker()};
 $("pickerCancel").onclick=closeDatePicker;
 $("datePickerModal").onclick=e=>{if(e.target===$("datePickerModal"))closeDatePicker()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDatePicker()});
-$("prev").onclick=()=>{let d=new Date(val("date")+"T00:00:00");d.setDate(d.getDate()-1);$("date").value=d.toISOString().slice(0,10);loadDate()};
-$("next").onclick=()=>{let d=new Date(val("date")+"T00:00:00");d.setDate(d.getDate()+1);$("date").value=d.toISOString().slice(0,10);loadDate()};
+$("prev").onclick=()=>shiftDate(-1);
+$("next").onclick=()=>shiftDate(1);
 ["sqReps","sqSets","puReps","puSets","stReps","stSets"].forEach(id=>$(id).oninput=updateTotals);
 ["nx","c","nightToilet","bowel"].forEach(id=>document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>setToggle(id,b.dataset.v)));
-$("save").onclick=()=>{let r=recordFromForm();data[r.date]=r;localStorage.setItem(KEY,JSON.stringify(data));renderHistory();alert("Saved")};
-$("clear").onclick=()=>clearForm(true);
+$("save").onclick=()=>{clearTimeout(autoSaveTimer);const ok=saveCurrentToData(false);alert(ok?"Saved":"保存に失敗しました。BACKUP JSON で退避してください。")};
+$("clear").onclick=()=>{if(!confirm("この日の入力内容を消去します。保存済みの記録も削除されます。よろしいですか?"))return;clearTimeout(autoSaveTimer);clearForm(true);saveCurrentToData(false)};
 
-function renderHistory(){
+function renderHistory(){renderBackupNote();
  const ds=Object.keys(data).sort().reverse().slice(0,30);
- $("history").innerHTML=ds.length?ds.map(d=>{let r=data[d];return `<div class="history-item"><div class="between row"><b>${d}</b><button onclick="openDate('${d}')">Open</button></div><div class="small">WT ${r.weight||"-"} / BP ${r.sys||"-"}/${r.dia||"-"} / STEPS ${r.steps||0} / SQ ${total(r.sq?.reps,r.sq?.sets)} / PU ${total(r.pu?.reps,r.pu?.sets)} / ST ${total(r.st?.reps,r.st?.sets)}</div></div>`}).join(""):"<div class='small'>No records yet</div>";
+ $("history").innerHTML=ds.length?ds.map(d=>{let r=data[d];return `<div class="history-item"><div class="between row"><b>${esc(d)}</b><button onclick="openDate('${esc(d)}')">Open</button></div><div class="small">WT ${esc(r.weight||"-")} / BP ${esc(r.sys||"-")}/${esc(r.dia||"-")} / STEPS ${esc(r.steps||0)} / SQ ${total(r.sq?.reps,r.sq?.sets)} / PU ${total(r.pu?.reps,r.pu?.sets)} / ST ${total(r.st?.reps,r.st?.sets)}</div></div>`}).join(""):"<div class='small'>No records yet</div>";
 }
-window.openDate=d=>{$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
-$("export").onclick=()=>{let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="daily-record-backup.json";a.click()};
+window.openDate=d=>{flushSave();$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
+const BK="dailyRecord_lastBackup";
+function markBackup(){try{localStorage.setItem(BK,String(Date.now()))}catch(e){}renderBackupNote()}
+function renderBackupNote(){
+  const el=$("backupNote");if(!el)return;
+  el.style.color="";
+  if(!Object.keys(data).length){el.textContent="";return}
+  let t=0;try{t=Number(localStorage.getItem(BK))||0}catch(e){}
+  if(!t){el.textContent="⚠ まだバックアップしていません";el.style.color="#b45309";return}
+  const days=Math.floor((Date.now()-t)/864e5);
+  el.textContent=(days>=30?"⚠ ":"")+"最終バックアップ: "+(days<=0?"今日":days+"日前");
+  if(days>=30)el.style.color="#b45309";
+}
+$("export").onclick=async()=>{
+  flushSave();
+  const name=`daily-record-backup-${today()}.json`;
+  const file=new File([JSON.stringify(data,null,2)],name,{type:"application/json"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});markBackup();return}
+  }catch(e){if(e&&e.name==="AbortError")return}
+  const url=URL.createObjectURL(file),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);markBackup();
+};
+$("import").onclick=()=>$("importFile").click();
+$("importFile").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{
+    const parsed=JSON.parse(await f.text());
+    if(!parsed||typeof parsed!=="object"||Array.isArray(parsed))throw new Error("形式が不正です");
+    const re=/^\d{4}-\d{2}-\d{2}$/,ok={};let n=0;
+    for(const [k,v] of Object.entries(parsed)){if(re.test(k)&&v&&typeof v==="object"&&!Array.isArray(v)){ok[k]={...v,date:k};n++}}
+    if(!n)throw new Error("記録が見つかりません");
+    if(!confirm(`${n}日分の記録を読み込みます。同じ日付の記録はバックアップの内容で上書きされます。よろしいですか?`))return;
+    flushSave();Object.assign(data,ok);
+    if(!saveData())throw new Error("保存に失敗しました");
+    loadDate();renderHistory();renderSummary();alert("復元しました");
+  }catch(err){alert("復元できませんでした: "+err.message)}
+};
 
+function saveData(){
+  try{localStorage.setItem(KEY,JSON.stringify(data));return true}
+  catch(e){console.error("Could not save records",e);return false}
+}
+function isEmptyRecord(r){
+  return !r.weight&&!r.sys&&!r.dia&&!r.pulse&&!r.steps&&!r.alcohol&&!r.memo&&!r.piano.song&&!r.piano.keys.length
+    &&["sq","pu","st"].every(k=>!Number(r[k].reps)&&!Number(r[k].sets))
+    &&!r.nx&&r.c==="0"&&r.nightToilet==="0"&&!r.bowel;
+}
 function saveCurrentToData(silent=true){
   const r=recordFromForm();
-  if(!r.date)return;
-  data[r.date]=r;
-  try{localStorage.setItem(KEY,JSON.stringify(data));}
-  catch(e){console.error("Could not save records",e);}
+  if(!r.date)return true;
+  if(isEmptyRecord(r)){if(!(r.date in data))return true;delete data[r.date]}
+  else data[r.date]=r;
+  const ok=saveData();
   if(!silent)renderHistory();
+  return ok;
 }
 let autoSaveTimer=null;
+function flushSave(){clearTimeout(autoSaveTimer);saveCurrentToData(true)}
+function shiftDate(n){flushSave();const [y,m,d]=val("date").split("-").map(Number);$("date").value=ymd(new Date(y,m-1,d+n));loadDate()}
 function scheduleAutoSave(){
   clearTimeout(autoSaveTimer);
   autoSaveTimer=setTimeout(()=>saveCurrentToData(true),500);
 }
 window.addEventListener("pagehide",()=>saveCurrentToData(true));
+document.addEventListener("visibilitychange",()=>{if(document.hidden)saveCurrentToData(true)});
 window.addEventListener("beforeunload",()=>saveCurrentToData(true));
 function getMonthlyRecord(date){
   const saved=data[date];
   if(saved)return saved;
-  if(val("date")===date)return recordFromForm();
+  if(val("date")===date){const f=recordFromForm();return isEmptyRecord(f)?null:f}
   return null;
 }
 function renderSummary(){
@@ -281,12 +325,12 @@ function renderMonthlyTable(m){
  for(let d=1;d<=days;d++){
   const date=m+"-"+String(d).padStart(2,"0"),r=getMonthlyRecord(date);
   rows+=`<tr><td><button class="monthly-link" type="button" onclick="openDateFromMonthly('${date}')">${d}</button></td>
-  <td>${r?.weight||""}</td><td>${r?`${r.sys||""}/${r.dia||""}`:""}</td><td>${r?.pulse||""}</td>
+  <td>${esc(r?.weight||"")}</td><td>${r&&(r.sys||r.dia)?`${esc(r.sys||"")}/${esc(r.dia||"")}`:""}</td><td>${esc(r?.pulse||"")}</td>
   <td>${r?total(r.sq?.reps,r.sq?.sets):""}</td><td>${r?total(r.pu?.reps,r.pu?.sets):""}</td><td>${r?total(r.st?.reps,r.st?.sets):""}</td>
-  <td>${r?.steps||""}</td><td>${r?.piano?.song||""}</td><td>${r?.piano?.keys?.join(",")||""}</td>
-  <td>${r?.nx==="yes"?"○":r?.nx==="no"?"－":""}</td><td>${r?.c==="0"?"－":r?.c?`${r.c}`:""}</td>
-  <td>${r?.nightToilet??""}</td><td>${r?.bowel==="yes"?"○":r?.bowel==="no"?"－":""}</td>
-  <td>${r?.alcohol||""}</td><td>${r?.memo||""}</td></tr>`;
+  <td>${esc(r?.steps||"")}</td><td>${esc(r?.piano?.song||"")}</td><td>${esc(Array.isArray(r?.piano?.keys)?r.piano.keys.join(","):"")}</td>
+  <td>${r?.nx==="yes"?"○":r?.nx==="no"?"－":""}</td><td>${r?.c==="0"?"－":r?.c?`${esc(r.c)}`:""}</td>
+  <td>${esc(r?.nightToilet??"")}</td><td>${r?.bowel==="yes"?"○":r?.bowel==="no"?"－":""}</td>
+  <td>${esc(r?.alcohol||"")}</td><td>${esc(r?.memo||"")}</td></tr>`;
  }
  $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>WT</th><th>BP</th><th>P</th><th>SQ</th><th>PU</th><th>ST</th><th>STEPS</th><th>PIANO</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
 }
@@ -295,13 +339,14 @@ function showPage(p){
  $("tabDaily").classList.toggle("active",p==="daily");$("tabMonthly").classList.toggle("active",p==="monthly");
  if(p==="monthly"){saveCurrentToData(true);renderSummary();}
 }
-window.openDateFromMonthly=d=>{$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
+window.openDateFromMonthly=d=>{flushSave();$("date").value=d;loadDate();showPage("daily");window.scrollTo({top:0,behavior:"smooth"})};
 $("month").onchange=renderSummary;$("tabDaily").onclick=()=>showPage("daily");$("tabMonthly").onclick=()=>showPage("monthly");
 
 buildExerciseSelectors();renderKeys();loadDate();renderHistory();renderSummary();
 // Automatically preserve edits even if the iPhone closes/suspends the app before SAVE is tapped.
 document.querySelectorAll("input, textarea, select").forEach(el=>el.addEventListener("input",scheduleAutoSave));
 document.querySelectorAll("#nx button,#c button,#nightToilet button,#bowel button,[data-key]").forEach(el=>el.addEventListener("click",scheduleAutoSave));
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
