@@ -32,7 +32,7 @@ button.primary{background:#8FC7A4;color:#173B2B}.actions{display:flex;gap:8px}.a
 .small{font-size:11px;color:#64748b}.history-item{border-top:1px solid #eef2f7;padding:9px 0}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#f8fafc;border-radius:10px;padding:9px}.stat b{display:block;font-size:17px}
 .table-wrap{overflow:auto;max-height:calc(100vh - 250px);border:1px solid #dbe2ec;border-radius:9px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-table{border-collapse:collapse;width:100%;min-width:974px;table-layout:fixed;font-size:11px}
+table{border-collapse:collapse;width:100%;min-width:720px;table-layout:fixed;font-size:11px}
 th,td{border-right:1px solid #dfe5ed;border-bottom:1px solid #dfe5ed;padding:1px 2px;text-align:center;white-space:nowrap;height:26px;overflow:hidden;text-overflow:ellipsis}
 th{background:#eef3f9;font-weight:800;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 #dfe5ed}
 td:first-child,th:first-child{position:sticky;left:0;background:#fff;z-index:2;font-weight:800}
@@ -46,9 +46,9 @@ th:first-child{background:#eef3f9;z-index:4}
 @media(max-width:430px){.basic-line{grid-template-columns:.9fr 1.6fr .9fr;gap:5px}.basic-line label{font-size:10px}.basic-line input{padding:8px 5px;font-size:14px}.bp-line{gap:3px}.bp-line input{padding:8px 3px}.section-title{font-size:15px}}
 
 /* v22: monthly table */
-.monthly-table th:nth-child(1){width:40px}.monthly-table th:nth-child(2){width:46px}.monthly-table th:nth-child(3){width:64px}.monthly-table th:nth-child(4){width:40px}.monthly-table th:nth-child(5){width:44px}.monthly-table th:nth-child(6){width:44px}.monthly-table th:nth-child(7){width:44px}.monthly-table th:nth-child(8){width:56px}.monthly-table th:nth-child(9){width:110px}.monthly-table th:nth-child(10){width:90px}.monthly-table th:nth-child(11){width:36px}.monthly-table th:nth-child(12){width:36px}.monthly-table th:nth-child(13){width:36px}.monthly-table th:nth-child(14){width:40px}.monthly-table th:nth-child(15){width:48px}.monthly-table th:nth-child(16){width:200px}
-.monthly-table th:nth-child(1),.monthly-table td:nth-child(1),.monthly-table th:nth-child(4),.monthly-table td:nth-child(4),.monthly-table th:nth-child(8),.monthly-table td:nth-child(8),.monthly-table th:nth-child(10),.monthly-table td:nth-child(10),.monthly-table th:nth-child(15),.monthly-table td:nth-child(15){border-right:2px solid #94a3b8}
-.monthly-table td:nth-child(9),.monthly-table td:nth-child(16){text-align:left}
+.monthly-table th:nth-child(1){width:36px}.monthly-table th:nth-child(2){width:40px}.monthly-table th:nth-child(3){width:40px}.monthly-table th:nth-child(4){width:40px}.monthly-table th:nth-child(5){width:130px}.monthly-table th:nth-child(6){width:40px}.monthly-table th:nth-child(7){width:32px}.monthly-table th:nth-child(8){width:32px}.monthly-table th:nth-child(9){width:36px}.monthly-table th:nth-child(10){width:40px}.monthly-table th:nth-child(11){width:44px}.monthly-table th:nth-child(12){width:190px}
+.monthly-table th:nth-child(1),.monthly-table td:nth-child(1),.monthly-table th:nth-child(4),.monthly-table td:nth-child(4),.monthly-table th:nth-child(6),.monthly-table td:nth-child(6),.monthly-table th:nth-child(11),.monthly-table td:nth-child(11){border-right:2px solid #94a3b8}
+.monthly-table td:nth-child(5),.monthly-table td:nth-child(12){text-align:left}
 .monthly-link{background:none;min-height:0;padding:2px 6px;font-size:11px;font-weight:800;color:#172033;width:100%}
 </style>
 </head>
@@ -319,14 +319,13 @@ function renderMonthlyTable(m){
  for(let d=1;d<=days;d++){
   const date=m+"-"+String(d).padStart(2,"0"),r=getMonthlyRecord(date);
   rows+=`<tr><td><button class="monthly-link" type="button" onclick="openDateFromMonthly('${date}')">${d}</button></td>
-  <td>${esc(r?.weight||"")}</td><td>${r&&(r.sys||r.dia)?`${esc(r.sys||"")}/${esc(r.dia||"")}`:""}</td><td>${esc(r?.pulse||"")}</td>
   <td>${r?total(r.sq?.reps,r.sq?.sets):""}</td><td>${r?total(r.pu?.reps,r.pu?.sets):""}</td><td>${r?total(r.st?.reps,r.st?.sets):""}</td>
 <td>${esc(r?.piano?.song||"")}</td><td>${esc(Array.isArray(r?.piano?.keys)?r.piano.keys.join(","):"")}</td>
   <td>${r?.nx==="yes"?"○":r?.nx==="no"?"－":""}</td><td>${r?.c==="0"?"－":r?.c?`${esc(r.c)}`:""}</td>
   <td>${esc(r?.nightToilet??"")}</td><td>${r?.bowel==="yes"?"○":r?.bowel==="no"?"－":""}</td>
   <td>${esc(r?.alcohol||"")}</td><td>${esc(r?.memo||"")}</td></tr>`;
  }
- $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>WT</th><th>BP</th><th>P</th><th>SQ</th><th>PU</th><th>ST</th><th>PIANO</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
+ $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>SQ</th><th>PU</th><th>ST</th><th>SONG</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
 }
 function showPage(p){
  $("dailyPage").style.display=p==="daily"?"block":"none";$("monthlyPage").style.display=p==="monthly"?"block":"none";
