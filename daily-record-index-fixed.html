@@ -82,7 +82,6 @@ th:first-child{background:#eef3f9;z-index:4}
     <div class="exercise"><div class="exercise-name">SQ — SQUAT</div><div class="grid2"><div><label>REPS</label><select id="sqReps"></select></div><div><label>SETS</label><select id="sqSets"></select></div></div><div id="sqTotal" class="total">TOTAL 0</div></div>
     <div class="exercise"><div class="exercise-name">PU — PUSH UP</div><div class="grid2"><div><label>REPS</label><select id="puReps"></select></div><div><label>SETS</label><select id="puSets"></select></div></div><div id="puTotal" class="total">TOTAL 0</div></div>
     <div class="exercise"><div class="exercise-name">ST — SIT UP</div><div class="grid2"><div><label>REPS</label><select id="stReps"></select></div><div><label>SETS</label><select id="stSets"></select></div></div><div id="stTotal" class="total">TOTAL 0</div></div>
-    <div style="margin-top:9px"><label for="steps">STEPS</label><input id="steps" type="number" min="0" inputmode="numeric" placeholder="steps"></div>
   </div>
 
   <div class="card">
@@ -229,7 +228,7 @@ let historyExpanded=false;
 function renderHistory(){renderBackupNote();
  const all=Object.keys(data).sort().reverse();
  const ds=historyExpanded?all:all.slice(0,7);
- let html=ds.length?ds.map(d=>{let r=data[d];return `<div class="history-item"><div class="between row"><b>${esc(d)}</b><button onclick="openDate('${esc(d)}')">Open</button></div><div class="small">STEPS ${esc(r.steps||0)} / SQ ${total(r.sq?.reps,r.sq?.sets)} / PU ${total(r.pu?.reps,r.pu?.sets)} / ST ${total(r.st?.reps,r.st?.sets)}</div></div>`}).join(""):"<div class='small'>No records yet</div>";
+ let html=ds.length?ds.map(d=>{let r=data[d];return `<div class="history-item"><div class="between row"><b>${esc(d)}</b><button onclick="openDate('${esc(d)}')">Open</button></div><div class="small">SQ ${total(r.sq?.reps,r.sq?.sets)} / PU ${total(r.pu?.reps,r.pu?.sets)} / ST ${total(r.st?.reps,r.st?.sets)}</div></div>`}).join(""):"<div class='small'>No records yet</div>";
  if(all.length>7)html+=`<div style="text-align:center;padding-top:8px"><button onclick="toggleHistory()">${historyExpanded?"最近の7件だけ表示":"すべて表示（全"+all.length+"件）"}</button></div>`;
  $("history").innerHTML=html;
 }
@@ -310,10 +309,9 @@ function getMonthlyRecord(date){
 }
 function renderSummary(){
  const m=$("month").value,rs=Object.values(data).filter(r=>r.date?.startsWith(m));
- const avg=rs.length?Math.round(rs.reduce((a,r)=>a+(Number(r.steps)||0),0)/rs.length):0;
  const sums=["sq","pu","st"].map(k=>rs.reduce((a,r)=>a+total(r[k]?.reps,r[k]?.sets),0));
  const alc=rs.reduce((a,r)=>a+(Number(r.alcohol)||0),0);
- $("summary").innerHTML=[["DAYS",rs.length+" days"],["AVG STEPS",avg.toLocaleString()+" steps"],["SQ TOTAL",sums[0]+""],["PU TOTAL",sums[1]+""],["ST TOTAL",sums[2]+""],["A TOTAL",alc.toLocaleString()+"mL"]].map(x=>`<div class="stat"><span class="small">${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ $("summary").innerHTML=[["DAYS",rs.length+" days"],["SQ TOTAL",sums[0]+""],["PU TOTAL",sums[1]+""],["ST TOTAL",sums[2]+""],["A TOTAL",alc.toLocaleString()+"mL"]].map(x=>`<div class="stat"><span class="small">${x[0]}</span><b>${x[1]}</b></div>`).join("");
  renderMonthlyTable(m);
 }
 function renderMonthlyTable(m){
@@ -323,12 +321,12 @@ function renderMonthlyTable(m){
   rows+=`<tr><td><button class="monthly-link" type="button" onclick="openDateFromMonthly('${date}')">${d}</button></td>
   <td>${esc(r?.weight||"")}</td><td>${r&&(r.sys||r.dia)?`${esc(r.sys||"")}/${esc(r.dia||"")}`:""}</td><td>${esc(r?.pulse||"")}</td>
   <td>${r?total(r.sq?.reps,r.sq?.sets):""}</td><td>${r?total(r.pu?.reps,r.pu?.sets):""}</td><td>${r?total(r.st?.reps,r.st?.sets):""}</td>
-  <td>${esc(r?.steps||"")}</td><td>${esc(r?.piano?.song||"")}</td><td>${esc(Array.isArray(r?.piano?.keys)?r.piano.keys.join(","):"")}</td>
+<td>${esc(r?.piano?.song||"")}</td><td>${esc(Array.isArray(r?.piano?.keys)?r.piano.keys.join(","):"")}</td>
   <td>${r?.nx==="yes"?"○":r?.nx==="no"?"－":""}</td><td>${r?.c==="0"?"－":r?.c?`${esc(r.c)}`:""}</td>
   <td>${esc(r?.nightToilet??"")}</td><td>${r?.bowel==="yes"?"○":r?.bowel==="no"?"－":""}</td>
   <td>${esc(r?.alcohol||"")}</td><td>${esc(r?.memo||"")}</td></tr>`;
  }
- $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>WT</th><th>BP</th><th>P</th><th>SQ</th><th>PU</th><th>ST</th><th>STEPS</th><th>PIANO</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
+ $("monthlyTable").classList.add("monthly-table");$("monthlyTable").innerHTML=`<thead><tr><th>DAY</th><th>WT</th><th>BP</th><th>P</th><th>SQ</th><th>PU</th><th>ST</th><th>PIANO</th><th>KEY</th><th>NX</th><th>C</th><th>UR</th><th>DEF</th><th>A</th><th>MEMO</th></tr></thead><tbody>${rows}</tbody>`;
 }
 function showPage(p){
  $("dailyPage").style.display=p==="daily"?"block":"none";$("monthlyPage").style.display=p==="monthly"?"block":"none";
